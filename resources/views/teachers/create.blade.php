@@ -20,7 +20,7 @@
 
                         <div>
                             <x-input-label for="color" value="Cor" />
-                            <x-text-input id="color" name="color" type="color" class="mt-1 block w-full" :value="old('color', '#000000')" required />
+                            <input id="color" name="color" type="color" class="mt-1 block h-10 w-20 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="{{ old('color', '#3B82F6') }}" required />
                             <x-input-error class="mt-2" :messages="$errors->get('color')" />
                         </div>
 
@@ -33,7 +33,7 @@
                                 </svg>
                                 {{ __('Salvar') }}
                             </x-primary-button>
-                            <a href="{{ route('teachers.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                            <a href="{{ route('teachers.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
                                     <path d="M18 6 6 18"/>
                                     <path d="m6 6 12 12"/>
