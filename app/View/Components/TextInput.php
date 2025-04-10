@@ -9,8 +9,17 @@ class TextInput extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $disabled = false)
-    {
+    public function __construct(
+        public $disabled = false,
+        public $type = 'text',
+        public $name = null,
+        public $id = null,
+        public $value = null,
+        public $required = false,
+        public $autofocus = false,
+        public $autocomplete = null,
+        public $placeholder = null
+    ) {
         //
     }
 

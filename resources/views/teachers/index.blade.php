@@ -8,16 +8,20 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">Lista de Professores</h3>
-                        <button type="button" onclick="openModal()" class="btn">
+                <div class="p-6 text-gray-900">
+                    <div class="flex justify-between items-center mb-4">
+                        <h1 class="text-2xl font-semibold text-gray-900">Lista de Professores</h1>
+                        <a href="{{ route('teachers.create') }}" class="btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+                                <path d="M5 12h14"/>
+                                <path d="M12 5v14"/>
+                            </svg>
                             Adicionar Professor
-                        </button>
+                        </a>
                     </div>
 
                     @if(session('success'))
-                        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                             <span class="block sm:inline">{{ session('success') }}</span>
                         </div>
                     @endif
@@ -30,91 +34,65 @@
                                         Nome
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
+                                        Cor
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Ações
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($teachers as $teacher)
+                                @forelse($teachers as $teacher)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $teacher->name }}
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ $teacher->name }}
+                                            </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $teacher->email }}
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full mr-2" style="background-color: {{ $teacher->color }}"></div>
+                                                <span class="text-sm text-gray-900">{{ $teacher->color }}</span>
+                                            </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button onclick="editTeacher({{ $teacher->id }}, '{{ $teacher->name }}', '{{ $teacher->email }}')" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
-                                            <form action="{{ route('teachers.destroy', $teacher->id) }}" method="POST" class="inline">
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="{{ route('teachers.edit', $teacher) }}" class="text-indigo-600 hover:text-indigo-900" title="Editar">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                                    <path d="m15 5 4 4"/>
+                                                </svg>
+                                            </a>
+                                            <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Tem certeza que deseja excluir este professor?')">Excluir</button>
+                                                <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Tem certeza que deseja excluir este professor?')" title="Excluir">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                        <path d="M3 6h18"/>
+                                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                                    </svg>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                            Nenhum professor cadastrado.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
+
+                    @if($teachers->hasPages())
+                        <div class="mt-4">
+                            {{ $teachers->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <div id="teacherModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <form id="teacherForm" method="POST" action="">
-                    @csrf
-                    <div id="methodField"></div>
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="mb-4">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
-                            <input type="text" name="name" id="name" class="input-field" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" name="email" id="email" class="input-field" required>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="submit" class="btn">
-                            Salvar
-                        </button>
-                        <button type="button" onclick="closeModal()" class="btn-secondary ml-3">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openModal() {
-            document.getElementById('teacherModal').classList.remove('hidden');
-            document.getElementById('teacherForm').action = "{{ route('teachers.store') }}";
-            document.getElementById('methodField').innerHTML = '';
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-        }
-
-        function closeModal() {
-            document.getElementById('teacherModal').classList.add('hidden');
-        }
-
-        function editTeacher(id, name, email) {
-            document.getElementById('teacherModal').classList.remove('hidden');
-            document.getElementById('teacherForm').action = `/teachers/${id}`;
-            document.getElementById('methodField').innerHTML = '@method("PUT")';
-            document.getElementById('name').value = name;
-            document.getElementById('email').value = email;
-        }
-    </script>
 </x-app-layout> 

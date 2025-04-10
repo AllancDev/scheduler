@@ -3,30 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Teacher extends Authenticatable
+class Teacher extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     protected $fillable = [
         'name',
-        'email',
-        'password',
+        'color',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public function subjects()
+    /**
+     * Get the schedules for the teacher.
+     */
+    public function schedules(): HasMany
     {
-        return $this->belongsToMany(Subject::class);
+        return $this->hasMany(Schedule::class);
+    }
+
+    /**
+     * Get the original teacher schedules.
+     */
+    public function originalSchedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class, 'original_teacher_id');
     }
 } 

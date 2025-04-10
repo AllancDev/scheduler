@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subject extends Model
 {
@@ -11,18 +12,13 @@ class Subject extends Model
 
     protected $fillable = [
         'name',
-        'description'
     ];
 
-    public function schedules()
+    /**
+     * Get the schedules for the subject.
+     */
+    public function schedules(): HasMany
     {
-        return $this->hasMany(SubjectSchedule::class);
-    }
-
-    public function teachers()
-    {
-        return $this->belongsToMany(Teacher::class, 'subject_schedules')
-            ->withPivot(['room', 'day_of_week', 'start_time', 'end_time', 'is_substitute', 'original_teacher_id'])
-            ->withTimestamps();
+        return $this->hasMany(Schedule::class);
     }
 } 
