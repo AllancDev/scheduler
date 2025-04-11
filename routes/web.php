@@ -8,6 +8,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -28,6 +29,11 @@ Route::middleware('auth')->group(function () {
     
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    // Rotas de verificação de email
+    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

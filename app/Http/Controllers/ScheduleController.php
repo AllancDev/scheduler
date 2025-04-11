@@ -49,7 +49,72 @@ class ScheduleController extends Controller
             'end_time' => 'required|date_format:H:i|after:start_time',
             'is_substitute' => 'nullable',
             'original_teacher_id' => 'required_if:is_substitute,1|exists:teachers,id|nullable',
+        ], [
+            'days.required' => 'Selecione pelo menos um dia da semana.',
+            'start_time.required' => 'O horário de início é obrigatório.',
+            'end_time.required' => 'O horário de término é obrigatório.',
+            'end_time.after' => 'O horário de término deve ser após o horário de início.',
         ]);
+
+
+        foreach ($validated['days'] as $day) {
+            $roomConflict = Schedule::whereHas('days', function ($query) use ($day) {
+                    $query->where('day_of_week', $day);
+                })
+                ->where('class_id', $class->id)
+                ->where('room', $validated['room'])
+                ->where(function ($query) use ($validated) {
+                    $query->where(function ($q) use ($validated) {
+                        $q->where('start_time', '<=', $validated['start_time'])
+                          ->where('end_time', '>', $validated['start_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '<', $validated['end_time'])
+                          ->where('end_time', '>=', $validated['end_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '>=', $validated['start_time'])
+                          ->where('end_time', '<=', $validated['end_time']);
+                    });
+                })
+                ->exists();
+
+            if ($roomConflict) {
+                return back()
+                    ->withErrors(['days' => "Já existe uma aula agendada neste horário para o dia selecionado."])
+                    ->withInput();
+            }
+
+            // Verificar conflitos de professor no mesmo dia e horário
+            $teacherConflict = Schedule::whereHas('days', function ($query) use ($day) {
+                    $query->where('day_of_week', $day);
+                })
+                ->where(function ($query) use ($validated) {
+                    $query->where('teacher_id', $validated['teacher_id'])
+                          ->orWhere('original_teacher_id', $validated['teacher_id']);
+                })
+                ->where(function ($query) use ($validated) {
+                    $query->where(function ($q) use ($validated) {
+                        $q->where('start_time', '<=', $validated['start_time'])
+                          ->where('end_time', '>', $validated['start_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '<', $validated['end_time'])
+                          ->where('end_time', '>=', $validated['end_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '>=', $validated['start_time'])
+                          ->where('end_time', '<=', $validated['end_time']);
+                    });
+                })
+                ->exists();
+
+            if ($teacherConflict) {
+                return back()
+                    ->withErrors(['teacher_id' => "O professor já tem uma aula agendada neste horário para o dia selecionado."])
+                    ->withInput();
+            }
+        }
 
         // Preparar os dados para o Schedule
         $scheduleData = [
@@ -114,20 +179,101 @@ class ScheduleController extends Controller
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'is_substitute' => 'nullable|in:0,1',
-            'original_teacher_id' => 'required_if:is_substitute,1|exists:teachers,id',
+            'original_teacher_id' => 'required_if:is_substitute,1|exists:teachers,id|nullable',
+        ], [
+            'days.required' => 'Selecione pelo menos um dia da semana.',
+            'start_time.required' => 'O horário de início é obrigatório.',
+            'end_time.required' => 'O horário de término é obrigatório.',
+            'end_time.after' => 'O horário de término deve ser após o horário de início.',
         ]);
 
-        $validated['is_substitution'] = $validated['is_substitute'] ?? false;
-        unset($validated['is_substitute']);
-        unset($validated['days']);
+        // Verificar conflitos de horário para cada dia selecionado
+        foreach ($validated['days'] as $day) {
+            // Verificar conflitos de sala no mesmo dia e horário
+            $roomConflict = Schedule::whereHas('days', function ($query) use ($day) {
+                    $query->where('day_of_week', $day);
+                })
+                ->where('id', '!=', $schedule->id)
+                ->where('class_id', $class->id)
+                ->where(function ($query) use ($validated) {
+                    $query->where(function ($q) use ($validated) {
+                        $q->where('start_time', '<=', $validated['start_time'])
+                          ->where('end_time', '>', $validated['start_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '<', $validated['end_time'])
+                          ->where('end_time', '>=', $validated['end_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '>=', $validated['start_time'])
+                          ->where('end_time', '<=', $validated['end_time']);
+                    });
+                })
+                ->exists();
 
-        $schedule->update($validated);
+            if ($roomConflict) {
+                return back()
+                    ->withErrors(['days' => "Já existe uma aula agendada neste horário para o dia selecionado."])
+                    ->withInput();
+            }
+
+            // Verificar conflitos de professor no mesmo dia e horário
+            $teacherConflict = Schedule::whereHas('days', function ($query) use ($day) {
+                    $query->where('day_of_week', $day);
+                })
+                ->where('id', '!=', $schedule->id)
+                ->where(function ($query) use ($validated) {
+                    $query->where('teacher_id', $validated['teacher_id'])
+                          ->orWhere('original_teacher_id', $validated['teacher_id']);
+                })
+                ->where(function ($query) use ($validated) {
+                    $query->where(function ($q) use ($validated) {
+                        $q->where('start_time', '<=', $validated['start_time'])
+                          ->where('end_time', '>', $validated['start_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '<', $validated['end_time'])
+                          ->where('end_time', '>=', $validated['end_time']);
+                    })
+                    ->orWhere(function ($q) use ($validated) {
+                        $q->where('start_time', '>=', $validated['start_time'])
+                          ->where('end_time', '<=', $validated['end_time']);
+                    });
+                })
+                ->exists();
+
+            if ($teacherConflict) {
+                return back()
+                    ->withErrors(['teacher_id' => "O professor já tem uma aula agendada neste horário para o dia selecionado."])
+                    ->withInput();
+            }
+        }
+
+        // Preparar os dados para o Schedule
+        $scheduleData = [
+            'subject_id' => $validated['subject_id'],
+            'teacher_id' => $validated['teacher_id'],
+            'room' => $validated['room'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+            'is_substitution' => !empty($validated['is_substitute']),
+        ];
+
+        // Adicionar professor original apenas se for substituição
+        if (!empty($validated['is_substitute']) && !empty($validated['original_teacher_id'])) {
+            $scheduleData['original_teacher_id'] = $validated['original_teacher_id'];
+        } else {
+            $scheduleData['original_teacher_id'] = null;
+        }
+
+        // Atualizar o Schedule
+        $schedule->update($scheduleData);
 
         // Remove existing days
         $schedule->days()->delete();
 
         // Add new days
-        foreach ($request->days as $day) {
+        foreach ($validated['days'] as $day) {
             ScheduleDay::create([
                 'schedule_id' => $schedule->id,
                 'day_of_week' => $day,

@@ -46,9 +46,9 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                    <a href="{{ route('profile.edit') }}" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                        {{ __('Perfil') }}
+                    </a>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -57,7 +57,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Sair') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -105,7 +105,7 @@
 
             <div class="mt-3 space-y-1">
                 <a href="{{ route('profile.edit') }}" class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium focus:outline-none transition duration-150 ease-in-out border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300">
-                    {{ __('Profile') }}
+                    {{ __('Perfil') }}
                 </a>
 
                 <!-- Authentication -->
