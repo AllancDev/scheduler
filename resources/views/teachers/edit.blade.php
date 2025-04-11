@@ -21,7 +21,7 @@
 
                         <div>
                             <x-input-label for="color" value="Cor" />
-                            <x-text-input id="color" name="color" type="color" class="mt-1 block w-full" :value="old('color', $teacher->color)" required />
+                            <input id="color" name="color" type="color" :value="old('color', $teacher->color)" class="mt-1 block h-10 w-20 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" value="{{ old('color', '#3B82F6') }}" required />
                             <x-input-error class="mt-2" :messages="$errors->get('color')" />
                         </div>
 

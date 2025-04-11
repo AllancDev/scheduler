@@ -15,18 +15,30 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
-                        {{ __('Professores') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
-                        {{ __('Matérias') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
-                        {{ __('Turmas') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
-                        {{ __('Calendário') }}
-                    </x-nav-link>
+                    
+                    @can('admin')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Usuários') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
+                            {{ __('Professores') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
+                            {{ __('Matérias') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                            {{ __('Turmas') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('view-calendar')
+                        <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                            {{ __('Calendário') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -46,9 +58,15 @@
                     </x-slot>
 
                     <x-slot name="content">
-                    <a href="{{ route('profile.edit') }}">
-                        {{ __('Perfil') }}
-                    </a>
+                        <div class="px-4 py-2 text-xs text-gray-400">
+                            {{ __('Gerenciar Conta') }}
+                        </div>
+
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Perfil') }}
+                        </x-dropdown-link>
+
+                        <div class="border-t border-gray-200"></div>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -82,18 +100,36 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
-                {{ __('Professores') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
-                {{ __('Matérias') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
-                {{ __('Turmas') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
-                {{ __('Calendário') }}
-            </x-responsive-nav-link>
+
+            @can('admin')
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Usuários') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('admin')
+                <x-responsive-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
+                    {{ __('Professores') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('admin')
+                <x-responsive-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
+                    {{ __('Matérias') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('admin')
+                <x-responsive-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                    {{ __('Turmas') }}
+                </x-responsive-nav-link>
+            @endcan
+
+            @can('view-calendar')
+                <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
+                    {{ __('Calendário') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
@@ -104,9 +140,9 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                    <a href="{{ route('profile.edit') }}">
-                        {{ __('Perfil') }}
-                    </a>
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    {{ __('Perfil') }}
+                </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
@@ -115,7 +151,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Sair') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

@@ -65,23 +65,23 @@
                             <div class="mt-2 grid grid-cols-2 md:grid-cols-5 gap-4">
                                 <label class="inline-flex items-center bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition cursor-pointer">
                                     <input type="checkbox" name="days[]" value="monday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array('monday', old('days', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2">Segunda</span>
+                                    <span class="ml-2">{{ \App\Helpers\DateHelper::translateDayOfWeek('monday') }}</span>
                                 </label>
                                 <label class="inline-flex items-center bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition cursor-pointer">
                                     <input type="checkbox" name="days[]" value="tuesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array('tuesday', old('days', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2">Terça</span>
+                                    <span class="ml-2">{{ \App\Helpers\DateHelper::translateDayOfWeek('tuesday') }}</span>
                                 </label>
                                 <label class="inline-flex items-center bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition cursor-pointer">
                                     <input type="checkbox" name="days[]" value="wednesday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array('wednesday', old('days', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2">Quarta</span>
+                                    <span class="ml-2">{{ \App\Helpers\DateHelper::translateDayOfWeek('wednesday') }}</span>
                                 </label>
                                 <label class="inline-flex items-center bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition cursor-pointer">
                                     <input type="checkbox" name="days[]" value="thursday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array('thursday', old('days', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2">Quinta</span>
+                                    <span class="ml-2">{{ \App\Helpers\DateHelper::translateDayOfWeek('thursday') }}</span>
                                 </label>
                                 <label class="inline-flex items-center bg-white px-4 py-2 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 transition cursor-pointer">
                                     <input type="checkbox" name="days[]" value="friday" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ in_array('friday', old('days', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2">Sexta</span>
+                                    <span class="ml-2">{{ \App\Helpers\DateHelper::translateDayOfWeek('friday') }}</span>
                                 </label>
                             </div>
                             <x-input-error class="mt-2" :messages="$errors->get('days')" />

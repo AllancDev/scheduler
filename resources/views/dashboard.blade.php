@@ -25,7 +25,7 @@
                             <p class="font-normal text-gray-700">Gerencie as turmas e seus horários.</p>
                         </a>
 
-                        <a href="{{ route('calendar') }}" class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
+                        <a href="{{ route('calendar.index') }}" class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-50">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Calendário</h5>
                             <p class="font-normal text-gray-700">Visualize o calendário de aulas.</p>
                         </a>

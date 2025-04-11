@@ -11,8 +11,16 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-4">
                         <h1 class="text-2xl font-semibold text-gray-900">Horários - {{ $class->name }}</h1>
-                        <a href="{{ route('classes.schedules.create', $class) }}" class="btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2">
+                        <a href="{{ route('classes.schedules.create', $class) }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-5 h-5 mr-2"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
                                 <path d="M5 12h14"/>
                                 <path d="M12 5v14"/>
                             </svg>
@@ -70,7 +78,7 @@
                                             <div class="text-sm text-gray-900">
                                                 @foreach($schedule->days as $day)
                                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mr-1">
-                                                        {{ ucfirst($day->day_of_week) }}
+                                                        {{ \App\Helpers\DateHelper::translateDayOfWeek($day->day_of_week) }}
                                                     </span>
                                                 @endforeach
                                             </div>
